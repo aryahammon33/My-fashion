@@ -150,187 +150,244 @@ if (shopProducts) {
         });
 
 }
-    /* =========================================
-       PRODUCT PAGE
-    ========================================= */
-fetch(`${API_URL}/api/products`)
-    .then(response => response.json())
-    .then(products => {
-        console.log("HARIYO products from backend:", products);
-    })
-    .catch(error => {
-        console.error("Backend connection error:", error);
-    });
-    const addToCartButton =
-        document.getElementById("add-to-cart");
+/* =========================================
+   PRODUCT PAGE
+========================================= */
+
+const addToCartButton =
+    document.getElementById("add-to-cart");
+
+if (addToCartButton) {
+
+    let selectedSize = null;
+    let quantity = 1;
+    let currentProduct = null;
+
+    /* -----------------------------
+       GET PRODUCT ID FROM URL
+    ----------------------------- */
+
+    const urlParams =
+        new URLSearchParams(window.location.search);
+
+    const productId =
+        urlParams.get("id");
 
 
-    if (addToCartButton) {
+    /* -----------------------------
+       PRODUCT IMAGE & CATEGORY
+    ----------------------------- */
 
-        let selectedSize = null;
+    function getProductImage(id) {
 
-        let quantity = 1;
+        if (id === "hariyo-essential-tee") {
+            return "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?auto=format&fit=crop&w=1200&q=85";
+        }
+
+        if (id === "hariyo-oversized-hoodie") {
+            return "https://images.unsplash.com/photo-1556821840-3a63f95609a7?auto=format&fit=crop&w=1200&q=85";
+        }
+
+        if (id === "hariyo-signature-dress") {
+            return "https://images.unsplash.com/photo-1595777457583-95e059d581b8?auto=format&fit=crop&w=1200&q=85";
+        }
+
+        if (id === "hariyo-relaxed-trousers") {
+            return "https://images.unsplash.com/photo-1506629905607-d9c297dba9b9?auto=format&fit=crop&w=1200&q=85";
+        }
+
+        return "";
+    }
 
 
-        /* -----------------------------
-           SIZE SELECTION
-        ----------------------------- */
+    function getProductCategory(id) {
 
-        const sizeButtons =
-            document.querySelectorAll(
-                ".size-options button"
+        if (id === "hariyo-essential-tee") {
+            return "HARIYO T-SHIRTS";
+        }
+
+        if (id === "hariyo-oversized-hoodie") {
+            return "HARIYO HOODIES";
+        }
+
+        if (id === "hariyo-signature-dress") {
+            return "HARIYO DRESSES";
+        }
+
+        if (id === "hariyo-relaxed-trousers") {
+            return "HARIYO TROUSERS";
+        }
+
+        return "HARIYO";
+    }
+
+
+    /* -----------------------------
+       LOAD PRODUCT FROM BACKEND
+    ----------------------------- */
+
+    fetch(`${API_URL}/api/products`)
+        .then(function (response) {
+            return response.json();
+        })
+        .then(function (products) {
+
+            currentProduct =
+                products.find(function (product) {
+                    return product.id === productId;
+                });
+
+
+            if (!currentProduct) {
+
+                document.getElementById(
+                    "product-name"
+                ).textContent =
+                    "Product not found.";
+
+                return;
+
+            }
+
+
+            /* -----------------------------
+               DISPLAY PRODUCT
+            ----------------------------- */
+
+            document.getElementById(
+                "product-name"
+            ).textContent =
+                currentProduct.name;
+
+
+            document.getElementById(
+                "product-price"
+            ).textContent =
+                "₦" +
+                currentProduct.price.toLocaleString();
+
+
+            document.getElementById(
+                "product-category"
+            ).textContent =
+                getProductCategory(
+                    currentProduct.id
+                );
+
+
+            document.getElementById(
+                "product-image"
+            ).src =
+                getProductImage(
+                    currentProduct.id
+                );
+
+
+            document.getElementById(
+                "product-image"
+            ).alt =
+                currentProduct.name;
+
+
+            document.getElementById(
+                "product-description"
+            ).textContent =
+                "A carefully designed HARIYO piece created for comfort, confidence and effortless style.";
+
+
+            document.getElementById(
+                "product-details-text"
+            ).textContent =
+                "Premium HARIYO clothing designed with a modern fit and attention to everyday comfort.";
+
+
+            document.title =
+                currentProduct.name +
+                " — HARIYO";
+
+        })
+        .catch(function (error) {
+
+            console.error(
+                "Unable to load product:",
+                error
             );
 
-
-        sizeButtons.forEach(function (button) {
-
-            button.addEventListener(
-                "click",
-                function () {
-
-                    sizeButtons.forEach(
-                        function (btn) {
-                            btn.classList.remove("selected");
-                        }
-                    );
-
-                    button.classList.add("selected");
-
-                    selectedSize =
-                        button.textContent.trim();
-
-                }
-            );
+            document.getElementById(
+                "product-name"
+            ).textContent =
+                "Unable to load product.";
 
         });
 
 
-        /* -----------------------------
-           QUANTITY
-        ----------------------------- */
+    /* -----------------------------
+       SIZE SELECTION
+    ----------------------------- */
 
-        const quantityDisplay =
-            document.getElementById("quantity");
-
-
-        const increaseButton =
-            document.getElementById(
-                "increase-quantity"
-            );
+    const sizeButtons =
+        document.querySelectorAll(
+            ".size-options button"
+        );
 
 
-        const decreaseButton =
-            document.getElementById(
-                "decrease-quantity"
-            );
+    sizeButtons.forEach(function (button) {
 
-
-        if (increaseButton) {
-
-            increaseButton.addEventListener(
-                "click",
-                function () {
-
-                    quantity++;
-
-                    quantityDisplay.textContent =
-                        quantity;
-
-                }
-            );
-
-        }
-
-
-        if (decreaseButton) {
-
-            decreaseButton.addEventListener(
-                "click",
-                function () {
-
-                    if (quantity > 1) {
-
-                        quantity--;
-
-                        quantityDisplay.textContent =
-                            quantity;
-
-                    }
-
-                }
-            );
-
-        }
-
-
-        /* -----------------------------
-           ADD TO CART
-        ----------------------------- */
-
-        addToCartButton.addEventListener(
+        button.addEventListener(
             "click",
             function () {
 
-                if (!selectedSize) {
-
-                    alert(
-                        "Please select a size first."
-                    );
-
-                    return;
-
-                }
-
-
-                const product = {
-
-                    id: "hariyo-essential-tee",
-
-                    name: "HARIYO Essential Tee",
-
-                    price: 18000,
-
-                    size: selectedSize,
-
-                    quantity: quantity,
-
-                    image:
-                        "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?auto=format&fit=crop&w=900&q=80"
-
-                };
-
-
-                const existingProduct =
-                    cart.find(function (item) {
-
-                        return (
-                            item.id === product.id &&
-                            item.size === product.size
+                sizeButtons.forEach(
+                    function (btn) {
+                        btn.classList.remove(
+                            "selected"
                         );
-
-                    });
-
-
-                if (existingProduct) {
-
-                    existingProduct.quantity +=
-                        product.quantity;
-
-                } else {
-
-                    cart.push(product);
-
-                }
-
-
-                saveCart();
-
-                updateCartCount();
-
-
-                alert(
-                    "HARIYO Essential Tee has been added to your cart."
+                    }
                 );
+
+                button.classList.add(
+                    "selected"
+                );
+
+                selectedSize =
+                    button.textContent.trim();
+
+            }
+        );
+
+    });
+
+
+    /* -----------------------------
+       QUANTITY
+    ----------------------------- */
+
+    const quantityDisplay =
+        document.getElementById("quantity");
+
+
+    const increaseButton =
+        document.getElementById(
+            "increase-quantity"
+        );
+
+
+    const decreaseButton =
+        document.getElementById(
+            "decrease-quantity"
+        );
+
+
+    if (increaseButton) {
+
+        increaseButton.addEventListener(
+            "click",
+            function () {
+
+                quantity++;
+
+                quantityDisplay.textContent =
+                    quantity;
 
             }
         );
@@ -338,6 +395,114 @@ fetch(`${API_URL}/api/products`)
     }
 
 
+    if (decreaseButton) {
+
+        decreaseButton.addEventListener(
+            "click",
+            function () {
+
+                if (quantity > 1) {
+
+                    quantity--;
+
+                    quantityDisplay.textContent =
+                        quantity;
+
+                }
+
+            }
+        );
+
+    }
+
+
+    /* -----------------------------
+       ADD TO CART
+    ----------------------------- */
+
+    addToCartButton.addEventListener(
+        "click",
+        function () {
+
+            if (!selectedSize) {
+
+                alert(
+                    "Please select a size first."
+                );
+
+                return;
+
+            }
+
+
+            if (!currentProduct) {
+
+                alert(
+                    "Product is still loading. Please try again."
+                );
+
+                return;
+
+            }
+
+
+            const product = {
+
+                id: currentProduct.id,
+
+                name: currentProduct.name,
+
+                price: currentProduct.price,
+
+                size: selectedSize,
+
+                quantity: quantity,
+
+                image:
+                    getProductImage(
+                        currentProduct.id
+                    )
+
+            };
+
+
+            const existingProduct =
+                cart.find(function (item) {
+
+                    return (
+                        item.id === product.id &&
+                        item.size === product.size
+                    );
+
+                });
+
+
+            if (existingProduct) {
+
+                existingProduct.quantity +=
+                    product.quantity;
+
+            } else {
+
+                cart.push(product);
+
+            }
+
+
+            saveCart();
+
+            updateCartCount();
+
+
+            alert(
+                currentProduct.name +
+                " has been added to your cart."
+            );
+
+        }
+    );
+
+}
     /* =========================================
        CART PAGE
     ========================================= */
