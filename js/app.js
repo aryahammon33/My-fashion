@@ -45,7 +45,111 @@ document.addEventListener("DOMContentLoaded", function () {
 
     }
 
+/* =========================================
+   SHOP PAGE — LOAD PRODUCTS
+========================================= */
 
+const shopProducts =
+    document.getElementById("shop-products");
+
+if (shopProducts) {
+
+    fetch(`${API_URL}/api/products`)
+        .then(function (response) {
+            return response.json();
+        })
+        .then(function (products) {
+
+            shopProducts.innerHTML = "";
+
+            products.forEach(function (product) {
+
+                const productCard =
+                    document.createElement("article");
+
+                productCard.className =
+                    "product-card";
+
+                let image = "";
+                let category = "";
+
+                if (product.id === "hariyo-essential-tee") {
+                    image = "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?auto=format&fit=crop&w=900&q=80";
+                    category = "T-SHIRTS";
+                }
+
+                if (product.id === "hariyo-oversized-hoodie") {
+                    image = "https://images.unsplash.com/photo-1556821840-3a63f95609a7?auto=format&fit=crop&w=900&q=80";
+                    category = "HOODIES";
+                }
+
+                if (product.id === "hariyo-signature-dress") {
+                    image = "https://images.unsplash.com/photo-1595777457583-95e059d581b8?auto=format&fit=crop&w=900&q=80";
+                    category = "DRESSES";
+                }
+
+                if (product.id === "hariyo-relaxed-trousers") {
+                    image = "https://images.unsplash.com/photo-1506629905607-d9c297dba9b9?auto=format&fit=crop&w=900&q=80";
+                    category = "TROUSERS";
+                }
+
+                productCard.innerHTML = `
+
+                    <a href="product.html?id=${product.id}">
+
+                        <div class="product-image">
+
+                            <img
+                                src="${image}"
+                                alt="${product.name}"
+                            >
+
+                        </div>
+
+                        <div class="product-info">
+
+                            <p class="product-category">
+                                ${category}
+                            </p>
+
+                            <h3>
+                                ${product.name}
+                            </h3>
+
+                            <p class="product-price">
+                                ₦${product.price.toLocaleString()}
+                            </p>
+
+                        </div>
+
+                    </a>
+
+                `;
+
+                shopProducts.appendChild(productCard);
+
+            });
+
+        })
+        .catch(function (error) {
+
+            console.error(
+                "Unable to load HARIYO products:",
+                error
+            );
+
+            shopProducts.innerHTML = `
+
+                <p>
+                    Unable to load products right now.
+                    Please try again later.
+                </p>
+
+            `;
+
+        });
+
+}
     /* =========================================
        PRODUCT PAGE
     ========================================= */
