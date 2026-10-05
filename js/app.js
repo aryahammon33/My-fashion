@@ -1,7 +1,7 @@
 /* =========================================
    HARIYO — SHOPPING SYSTEM
 ========================================= */
-
+const API_URL = "https://my-fashion-backend.onrender.com";
 document.addEventListener("DOMContentLoaded", function () {
 
     /* =========================================
