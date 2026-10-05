@@ -49,7 +49,14 @@ document.addEventListener("DOMContentLoaded", function () {
     /* =========================================
        PRODUCT PAGE
     ========================================= */
-
+fetch(`${API_URL}/api/products`)
+    .then(response => response.json())
+    .then(products => {
+        console.log("HARIYO products from backend:", products);
+    })
+    .catch(error => {
+        console.error("Backend connection error:", error);
+    });
     const addToCartButton =
         document.getElementById("add-to-cart");
 
