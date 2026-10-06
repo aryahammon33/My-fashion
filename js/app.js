@@ -181,7 +181,7 @@ if (addToCartButton) {
     function getProductImage(id) {
 
         if (id === "hariyo-essential-tee") {
-            return "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?auto=format&fit=crop&w=1200&q=85";
+            return "https://raw.githubusercontent.com/aryahammon33/My-fashion/refs/heads/main/image/35C99198-7411-4623-895A-DF6E1117B84B.jpeg";
         }
 
         if (id === "hariyo-oversized-hoodie") {
