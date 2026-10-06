@@ -74,8 +74,7 @@ if (shopProducts) {
                 let category = "";
 
                 if (product.id === "hariyo-essential-tee") {
-                    image = "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?auto=format&fit=crop&w=900&q=80";
-                    category = "T-SHIRTS";
+                    image = "https://raw.githubusercontent.com/aryahammon33/My-fashion/refs/heads/main/image/35C99198-7411-4623-895A-DF6E1117B84B.jpeg";
                 }
 
                 if (product.id === "hariyo-oversized-hoodie") {
